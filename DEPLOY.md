@@ -99,18 +99,20 @@ php artisan route:cache
 
 `db:seed` will only create the admin if `ADMIN_EMAIL` and `ADMIN_PASSWORD` are set in `.env`.
 
-If your host has **no terminal at all**, temporarily add a one-shot setup route to `routes/web.php`:
+If your host has **no terminal at all**, temporarily add a one-shot setup route to `routes/api.php` (NOT `routes/web.php` — the web middleware stack reads the `sessions` table before your route fires, which doesn't exist yet):
 
 ```php
-Route::get('/_setup_abc123', function () {
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('_setup_abc123', function () {
     Artisan::call('key:generate', ['--force' => true]);
     Artisan::call('migrate', ['--force' => true]);
     Artisan::call('db:seed', ['--force' => true]);
-    return 'OK';
+    return response()->json(['status' => 'OK', 'output' => Artisan::output()]);
 });
 ```
 
-Hit it once in your browser, then **delete the route** immediately.
+Hit `https://yourdomain.com/api/_setup_abc123` once in your browser, then **delete the route** immediately and redeploy.
 
 ## Verify
 
