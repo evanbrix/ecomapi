@@ -1,0 +1,19 @@
+# Block execution of any script-like uploads in this directory.
+# Files here should only ever be images.
+
+<FilesMatch "\.(php|phtml|phps|phar|pl|py|cgi|sh|asp|aspx|js|html|htm)$">
+    Require all denied
+</FilesMatch>
+
+# Disable PHP handler if mod_php is active.
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+Options -ExecCGI -Indexes

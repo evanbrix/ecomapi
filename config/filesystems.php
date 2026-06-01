@@ -38,10 +38,14 @@ return [
             'report' => false,
         ],
 
+        // Writes directly into public/uploads/ so no `storage:link` symlink is
+        // required. This is the simplest setup for shared hosting where
+        // symlink() is often disabled. For multi-server or cloud setups,
+        // switch FILESYSTEM_DISK to 's3' instead.
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'root' => public_path('uploads'),
+            'url' => env('APP_URL').'/uploads',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
@@ -74,7 +78,8 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
+        // The 'public' disk writes directly to public/uploads/, so no symlink
+        // is needed. Keep this empty unless you re-point the disk elsewhere.
     ],
 
 ];

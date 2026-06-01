@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
-class ProductResource extends JsonResource
+class CategoryResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -14,16 +14,9 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'price' => (float) $this->price,
-            'sale_price' => $this->sale_price !== null ? (float) $this->sale_price : null,
             'image' => $this->image ? Storage::url($this->image) : null,
-            'stock' => (int) $this->stock,
             'is_active' => (bool) $this->is_active,
-            'category' => $this->whenLoaded('category', fn () => [
-                'id' => $this->category->id,
-                'name' => $this->category->name,
-                'slug' => $this->category->slug,
-            ]),
+            'products_count' => $this->whenCounted('products'),
         ];
     }
 }
